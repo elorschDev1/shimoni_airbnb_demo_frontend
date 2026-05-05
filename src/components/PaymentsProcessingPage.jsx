@@ -11,7 +11,7 @@ const PaymentsProcessingPage = () => {
     let totalAmountCharged=durationOfStay*rentalPrice;
 
     let retrievePaymentInfo=async()=>{
-        let requestDetails=await fetch("https://2047-105-160-97-159.ngrok-free.app/callback",{
+        let requestDetails=await fetch("  https://b040-105-160-97-159.ngrok-free.app/callback",{
             method:"GET",
             headers:{
                 "Content-Type":"application/json"
