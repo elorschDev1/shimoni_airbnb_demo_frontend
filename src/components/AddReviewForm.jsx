@@ -41,7 +41,7 @@ const AddReviewForm = () => {
         if(formIsValid==true){
             try{
                    const handleReviewData=async()=>{
-                    let sendReview=await fetch("http://localhost:5000/clientReviews",{
+                    let sendReview=await fetch("https://shimonigetawayhomes.onrender.com/clientReviews",{
                         method:"POST",
                         headers:{
                             "Content-Type":"application/json"
