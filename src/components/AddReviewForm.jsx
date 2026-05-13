@@ -46,6 +46,7 @@ const AddReviewForm = () => {
                         headers:{
                             "Content-Type":"application/json"
                         },
+
                         body:JSON.stringify({clientName,clientReview})
                     });
                     let serverResponse=await sendReview.json();
