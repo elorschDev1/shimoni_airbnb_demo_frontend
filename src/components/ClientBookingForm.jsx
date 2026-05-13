@@ -127,7 +127,7 @@ const ClientBookingForm = () => {
         setPhoneNumberToBill(phoneValue);
          try{
             const submitClientBooking=async()=>{
-                let requestBooking=await fetch("http://localhost:5000/clientBookings",{
+                let requestBooking=await fetch("https://shimonigetawayhomes.onrender.com/clientBookings",{
                     method:"POST",
                     headers:{
                         "Content-Type":"application/json"
