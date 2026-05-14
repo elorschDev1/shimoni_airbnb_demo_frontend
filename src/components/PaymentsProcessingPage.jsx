@@ -11,7 +11,7 @@ const PaymentsProcessingPage = () => {
     let totalAmountCharged=durationOfStay*rentalPrice;
 
     let retrievePaymentInfo=async()=>{
-        let requestDetails=await fetch("  https://b040-105-160-97-159.ngrok-free.app/callback",{
+        let requestDetails=await fetch("https://shimonigetawayhomes.onrender.com/callback",{
             method:"GET",
             headers:{
                 "Content-Type":"application/json"
@@ -29,7 +29,7 @@ const PaymentsProcessingPage = () => {
 
     let submitPaymentDetails=async()=>{
         try{
-            let res=await fetch("http://localhost:5000/clientPayments",{
+            let res=await fetch("https://shimonigetawayhomes.onrender.com/clientPayments",{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
