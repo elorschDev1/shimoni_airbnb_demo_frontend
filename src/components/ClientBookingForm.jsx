@@ -35,7 +35,7 @@ const ClientBookingForm = () => {
     let [specialRequestError,setSpecialRequestError]=useState("");
     let [backendResponse,setBackendResponse]=useState("");
     let [messageClassName,setMessageClassName]=useState("");
-    let {setPhoneNumberToBill,setDurationOfStay}=useContext(ClientBillingContext);
+    let {setPhoneNumberToBill,setDurationOfStay,setInsertedBookingID}=useContext(ClientBillingContext);
     let navigate=useNavigate();
 
 
@@ -150,6 +150,7 @@ const ClientBookingForm = () => {
                     setBackendResponse("");
                     setBackendResponse(bookingResult.roomAvailability);
                     setMessageClassName(bookingResult.messageClass);
+                    setInsertedBookingID(bookingResult.insertedBookingID);
                     if(bookingResult.initiatePaymentProcess===true){
                          let checkIn=new Date(checkInDate);
                          let checkOut=new Date(checkOutDate);

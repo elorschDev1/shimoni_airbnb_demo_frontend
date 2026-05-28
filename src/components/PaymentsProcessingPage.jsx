@@ -3,7 +3,7 @@ import ClientBillingContext from '../context/ClientBillingContext';
 
 
 const PaymentsProcessingPage = () => {
-    let {phoneNumberToBill,durationOfStay}=useContext(ClientBillingContext);
+    let {phoneNumberToBill,durationOfStay,insertedBookingID}=useContext(ClientBillingContext);
     let [stkPushStatus,setStkPushStatus]=useState("");
     let [stkPushSuccess,setSTKPushSuccess]=useState("");
 
@@ -34,7 +34,7 @@ const PaymentsProcessingPage = () => {
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({phoneNumberToBill,totalAmountCharged})   
+                body:JSON.stringify({phoneNumberToBill,totalAmountCharged,insertedBookingID})   
             })
             let data=await res.json();
             console.log(data);

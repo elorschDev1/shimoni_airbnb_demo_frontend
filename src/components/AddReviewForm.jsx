@@ -22,7 +22,7 @@ const AddReviewForm = () => {
             setClientNameError("Your name should not be less than 3 characters long.");
             formIsValid=false;
         }
-        if(clientName.length!==""&&clientName.length>3&&clientName.length>20){
+        if(clientName!==""&&clientName.length>3&&clientName.length>20){
             setClientNameError("Your name should not be longer than 20 characters.");
             formIsValid=false;
         }
