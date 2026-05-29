@@ -11,7 +11,7 @@ const PaymentsProcessingPage = () => {
     let totalAmountCharged=durationOfStay*rentalPrice;
 
     let retrievePaymentInfo=async()=>{
-        let requestDetails=await fetch("https://shimonigetawayhomes.onrender.com/callback",{
+        let requestDetails=await fetch("https://shimonigetawayhomes.onrender.com/paymentWebhook",{
             method:"GET",
             headers:{
                 "Content-Type":"application/json"
