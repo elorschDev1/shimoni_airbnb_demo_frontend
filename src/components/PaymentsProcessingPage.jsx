@@ -1,4 +1,4 @@
-import {useContext,useState} from 'react';
+import {useContext,useState,useEffect} from 'react';
 import ClientBillingContext from '../context/ClientBillingContext';
 
 
@@ -50,13 +50,8 @@ const PaymentsProcessingPage = () => {
             else{
                 setSTKPushSuccess(true);
                 console.log("The stk push process was successful.");
-                try{
-                     retrievePaymentInfo();
+                
 
-                }catch(error){
-                    console.log(`The following error is related to retrieving the payment info: ${error}`)
-                }
-               
             
             }
 
@@ -64,6 +59,14 @@ const PaymentsProcessingPage = () => {
             console.error(err);
         }
     }
+
+    useEffect(()=>{
+        try {
+           if(stkPushSuccess===true) retrievePaymentInfo()
+        } catch (error) {
+            console.error(error)
+        }
+    },[stkPushSuccess])
 
 
   return (
