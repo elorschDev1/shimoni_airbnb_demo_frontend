@@ -1,4 +1,4 @@
-import {useContext,useState,useEffect} from 'react';
+import {useContext,useState} from 'react';
 import ClientBillingContext from '../context/ClientBillingContext';
 
 
@@ -11,15 +11,9 @@ const PaymentsProcessingPage = () => {
     let totalAmountCharged=durationOfStay*rentalPrice;
 
     let retrievePaymentInfo=async()=>{
-        let requestDetails=await fetch("https://shimonigetawayhomes.onrender.com/paymentWebhook",{
-            method:"GET",
-            headers:{
-                "Content-Type":"application/json"
-            }
-        });
+        let requestDetails=await fetch("https://shimonigetawayhomes.onrender.com/paymentWebhook");
         let data=await requestDetails.json();
         console.log(data);
-
     }
 
 
@@ -50,7 +44,12 @@ const PaymentsProcessingPage = () => {
             else{
                 setSTKPushSuccess(true);
                 console.log("The stk push process was successful.");
-                
+                try{
+                     retrievePaymentInfo();
+
+                }catch(error){
+                    console.log(`The following error is related to retrieving the payment info: ${error}`)
+                }
 
             
             }
@@ -59,14 +58,6 @@ const PaymentsProcessingPage = () => {
             console.error(err);
         }
     }
-
-    useEffect(()=>{
-        try {
-           if(stkPushSuccess===true) retrievePaymentInfo()
-        } catch (error) {
-            console.error(error)
-        }
-    },[stkPushSuccess])
 
 
   return (
