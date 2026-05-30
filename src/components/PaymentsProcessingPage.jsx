@@ -96,15 +96,14 @@ const PaymentsProcessingPage = () => {
 
         </div>
 
-        <div className="bg-white p-2 m-2">
+        <div className="bg-white p-3 m-3">
             {stkPushSuccess===false?<p className='text-danger fw-bold fs-md'>{stkPushStatus}</p>:<p className="text-success fw-bold fs-md">{stkPushSuccess}</p>}
         </div>
     </div>
 
     </section>
   
-
-    
+  
     </>
   )
 }
