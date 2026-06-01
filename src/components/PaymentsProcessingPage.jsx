@@ -57,14 +57,14 @@ const PaymentsProcessingPage = () => {
             if(success===false){
                 setStkPushStatus("Hi,there could be a technical issue preventing your Mpesa payment, please retry after a few seconds.. ");
                 setSTKPushSuccess(false);
-                setTimeout(()=>{
+               /* setTimeout(()=>{
                 setStkPushStatus("");
                 setSTKPushSuccess("");
-               },1000);
+               },1000);*/
             }
             else{
                 setSTKPushSuccess(true);
-                console.log("The stk push process was successful.");
+                console.log("The stk push process was successful. Beginning database verification polling...");
                 const interval=setInterval(()=>{
                     checkPaymentStatus();
                 },3000);
