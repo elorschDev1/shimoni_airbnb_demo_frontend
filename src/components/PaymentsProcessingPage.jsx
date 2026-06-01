@@ -13,7 +13,7 @@ const PaymentsProcessingPage = () => {
 
     let checkPaymentStatus=async()=>{
         try {
-            let res=await fetch(`https://shimonigetawayhomes.onrender.com/paymentsInfo?bookingId=${insertedBookingID}`)
+            let res=await fetch(`https://shimonigetawayhomes.onrender.com/paymentWebHook?bookingId=${insertedBookingID}`)
             let data=await res.json();
             console.log(`Status checked from the DB:${data}`);
 
