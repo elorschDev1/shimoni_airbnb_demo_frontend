@@ -1,81 +1,89 @@
-import {useContext,useState,useEffect} from 'react';
+import {useContext,useState,useEffect,useRef} from 'react';
 import ClientBillingContext from '../context/ClientBillingContext';
 
 
 const PaymentsProcessingPage = () => {
-    let {phoneNumberToBill,durationOfStay,insertedBookingID}=useContext(ClientBillingContext);
-    let [stkPushStatus,setStkPushStatus]=useState("");
-    let [stkPushSuccess,setSTKPushSuccess]=useState("");
-    let [pollingIntervalId,setPollingIntervalId]=useState(null);
+    const {phoneNumberToBill,durationOfStay,insertedBookingID}=useContext(ClientBillingContext);
+    const [stkPushStatus,setStkPushStatus]=useState("");
+    const [isSuccess,setIsSuccess]=useState(false);
+    const [isLoading,setIsLoading]=useState(false);
 
-    let rentalPrice=1;
-    let totalAmountCharged=durationOfStay*rentalPrice;
+    const pollingIntervalRef=useRef(null);
 
-    let checkPaymentStatus=async()=>{
+    const rentalPrice=1;
+    const totalAmountCharged=durationOfStay*rentalPrice;
+
+    const checkPaymentStatus=async()=>{
         try {
-            let res=await fetch(`https://shimonigetawayhomes.onrender.com/paymentWebHook?bookingId=${insertedBookingID}`)
-            let data=await res.json();
+            const res=await fetch(`https://shimonigetawayhomes.onrender.com/paymentWebHook?bookingId=${insertedBookingID}`)
+            const data=await res.json();
             console.log(`Status checked from the DB:${data}`);
 
             if(data.status === "Paid"){
-                setSTKPushSuccess(true);
+                setIsSuccess(true);
                 setStkPushStatus("Great, your payment has been received,looking forward to having you with us.");
-                clearInterval(pollingIntervalId);
+                stopPolling();
             }
-            else if (data.status === "Failed" || data.status === "Cancelled") {
+            else if (data.status === "TimedOut" || data.status === "Cancelled") {
                 setStkPushStatus("Transaction was cancelled or timed out. Please try again.");
-                setSTKPushSuccess(false);
-                clearInterval(pollingIntervalId);
+                setIsSuccess(false);
+                stopPolling();
             } else {
                 setStkPushStatus("Waiting for your Mpesa PIN entry... ");
             }
 
         } catch (error) {
-            console.error("Error checking verification poll:", error);
+            console.error("Error checking payment status:", error);
         }
     }
 
-   useEffect(()=>{
-    return()=>{
-        if(pollingIntervalId)clearInterval(pollingIntervalId);
+    const stopPolling=()=>{
+        if(pollingIntervalRef.current){
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current=null;
+        }
     }
-   },[pollingIntervalId])
+
+   const startPolling=()=>{
+    stopPolling();
+    pollingIntervalRef.current=setInterval(checkPaymentStatus,3000);
+   }
 
 
-
-    let submitPaymentDetails=async()=>{
+    const submitPaymentDetails=async()=>{
+        if(isLoading)return;
+        setIsLoading(true);
+        setStkPushStatus("Initiating the Mpesa payment...");
+        setIsSuccess(false);
         try{
-            setStkPushStatus("Initiating the Mpesa payment...");
-            let res=await fetch("https://shimonigetawayhomes.onrender.com/clientPayments",{
+           
+            const res=await fetch("https://shimonigetawayhomes.onrender.com/clientPayments",{
                 method:"POST",
                 headers:{ "Content-Type":"application/json"},
                 body:JSON.stringify({phoneNumberToBill,totalAmountCharged,insertedBookingID})   
             })
-            let data=await res.json();
+            const data=await res.json();
             console.log(data);
-            let {success}=data;
-            if(success===false){
+            
+            if(data.success===false){
                 setStkPushStatus("Hi,there could be a technical issue preventing your Mpesa payment, please retry after a few seconds.. ");
-                setSTKPushSuccess(false);
-               /* setTimeout(()=>{
-                setStkPushStatus("");
-                setSTKPushSuccess("");
-               },1000);*/
+                setIsSuccess(false);
             }
             else{
-                setSTKPushSuccess(true);
+                setStkPushStatus(" Please check your phone to enter M-Pesa PIN...");
                 console.log("The stk push process was successful. Beginning database verification polling...");
-                const interval=setInterval(()=>{
-                    checkPaymentStatus();
-                },3000);
-                setPollingIntervalId(interval);
+                startPolling();
             }
         }catch(err){
             console.error(err);
             setStkPushStatus("Network error submitting payment request.");
-            setSTKPushSuccess(false);
+            setIsSuccess(false);
         }
     }
+
+    useEffect(() => {
+        return () => stopPolling();
+    }, []);
 
 
   return (
@@ -97,8 +105,14 @@ const PaymentsProcessingPage = () => {
         </div>
 
         <div className="bg-white p-3 m-3">
-            {stkPushSuccess?<p className='text-success fw-bold fs-md'>{stkPushStatus}</p>:<p className='text-danger fw-bold fs-md'>{stkPushStatus}</p>}
-        </div>
+                    {stkPushStatus && (
+                        <p className={`fw-bold fs-md ${isSuccess ? 'text-success' : 'text-danger'}`}>
+                            {stkPushStatus}
+                        </p>
+                    )}
+                </div>
+
+        
     </div>
 
     </section>
